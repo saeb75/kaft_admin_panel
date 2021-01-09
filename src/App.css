@@ -5,7 +5,9 @@
   cursor: pointer;
   transition: color 0.3s;
 }
-
+#components-grid-demo-flex [class~="ant-row"] {
+  background: rgba(128, 128, 128, 0.08);
+}
 #components-layout-demo-custom-trigger .trigger:hover {
   color: #1890ff;
 }
@@ -20,7 +22,7 @@
   background: #fff;
 }
 * {
-  font-family: "Vazir", sans-serif;
+  font-family: "Vazir", sans-serif !important;
 }
 .container {
   padding-right: 15px;

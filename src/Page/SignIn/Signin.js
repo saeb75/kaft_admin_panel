@@ -1,9 +1,10 @@
 import { ConfigProvider, Layout } from "antd";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Form, Input, Button, Checkbox } from "antd";
 import "./style.css";
 import { useDispatch, useSelector } from "react-redux";
 import { signIn } from "../../Action/AuthAction";
+import { Redirect, useHistory } from "react-router-dom";
 const layout = {
   labelCol: {
     span: 8,
@@ -21,18 +22,23 @@ const tailLayout = {
 const { Header, Content, Footer, Sider } = Layout;
 const Signin = () => {
   const [signForm, setSignForm] = useState({ emai: "", password: "" });
-
+  let history = useHistory();
   const auth = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   const onFinish = (values) => {
     setSignForm(values);
     dispatch(signIn(values));
   };
-  console.log(auth);
+
+  useEffect(() => {
+    if (auth.authenticate) {
+      return history.push("/");
+    }
+  }, [auth.authenticate]);
   const onFinishFailed = (errorInfo) => {
     console.log("Failed:", errorInfo);
   };
-  console.log(signForm);
+
   return (
     <ConfigProvider direction="rtl">
       <div className="container SignInContainer" style={{ width: "100%" }}>
