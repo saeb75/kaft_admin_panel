@@ -10,20 +10,21 @@ const { Column, ColumnGroup } = Table;
 const Users = () => {
   const [deletState, setDeleteState] = useState();
   const [openDelete, setOpenDelete] = useState(false);
+  const [updateState, SetUpdateState] = useState();
   const [openUpdate, SetOpenUpdate] = useState(false);
 
   const user = useSelector((state) => state.user);
   const dispatch = useDispatch();
   useEffect(() => {
     return dispatch(getUsers());
-  }, [user.users.length]);
+  }, []);
   const showDeleteModal = (record) => {
     setOpenDelete(true);
     setDeleteState(record);
   };
   const showUpdateModal = (record) => {
     SetOpenUpdate(true);
-    setDeleteState(record);
+    SetUpdateState(record);
   };
   const handleDeleteCancel = () => {
     setOpenDelete(false);
@@ -81,14 +82,12 @@ const Users = () => {
         open={openUpdate}
         handleCancel={handleUpdateCancel}
         modalTitle="آپدیت کاربر"
-        footer={[
-          <Button type="primary" onClick={() => deleteUserById(deletState._id)}>
-            بله
-          </Button>,
-          <Button onClick={handleUpdateCancel}>خیر</Button>,
-        ]}
+        footer={[]}
       >
-        <UserUpdate />
+        <UserUpdate
+          updateState={updateState}
+          handleUpdateCancel={handleUpdateCancel}
+        />
       </MyModal>
     </>
   );

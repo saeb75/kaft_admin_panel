@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "antd/dist/antd.css";
 import { Layout, Menu, Avatar } from "antd";
 import "./style.css";
@@ -17,6 +17,8 @@ import {
 import { ConfigProvider } from "antd";
 import SubMenu from "antd/lib/menu/SubMenu";
 import { Link, NavLink, useLocation, useParams } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { logut } from "../../Action/AuthAction";
 
 const { Header, Sider, Content } = Layout;
 
@@ -31,7 +33,7 @@ const MainLayout = ({ children }) => {
     setCollapsed(!collapsed);
   };
   const [openKeys, setOpenKeys] = React.useState(["sub1"]);
-
+  const dispatch = useDispatch();
   const onOpenChange = (keys) => {
     const latestOpenKey = keys.find((key) => openKeys.indexOf(key) === -1);
     if (rootSubmenuKeys.indexOf(latestOpenKey) === -1) {
@@ -40,6 +42,11 @@ const MainLayout = ({ children }) => {
       setOpenKeys(latestOpenKey ? [latestOpenKey] : []);
     }
   };
+  const logoutUser = () => {
+    dispatch(logut());
+  };
+  const auth = useSelector((state) => state.auth);
+
   return (
     <ConfigProvider direction="rtl">
       <Layout style={{ height: "100vh" }}>
@@ -51,7 +58,11 @@ const MainLayout = ({ children }) => {
                 shape="square"
                 size={64}
                 style={{ color: "#f56a00", backgroundColor: "#fde3cf" }}
-                src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"
+                src={
+                  auth.user.profilePicture
+                    ? auth.user.profilePicture
+                    : "https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"
+                }
               />
             )}
           </div>
@@ -69,7 +80,12 @@ const MainLayout = ({ children }) => {
               <NavLink to="/users">کاربران</NavLink>
             </Menu.Item>
             <SubMenu key="sub1" icon={<MailOutlined />} title="دسته‌ها">
-              <Menu.Item key="2">همه دسته‌ها</Menu.Item>
+              <Menu.Item
+                key="2"
+                className={pathname == "/category" && "ant-menu-item-selected"}
+              >
+                <NavLink to="/category"> همه دسته‌ها </NavLink>
+              </Menu.Item>
               <Menu.Item key="3">اضافه کردن دسته</Menu.Item>
             </SubMenu>
             <SubMenu
@@ -99,7 +115,7 @@ const MainLayout = ({ children }) => {
             <Menu.Item key="12" icon={<VideoCameraOutlined />}>
               nav 2
             </Menu.Item>
-            <Menu.Item key="13" icon={<LoginOutlined />}>
+            <Menu.Item key="13" icon={<LoginOutlined />} onClick={logoutUser}>
               خروج
             </Menu.Item>
           </Menu>

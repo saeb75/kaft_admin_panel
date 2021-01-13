@@ -1,12 +1,16 @@
 const { Route, Redirect } = require("react-router-dom");
 
 const PriviteRoute = ({ Component, authenticate, ...rest }) => {
-  let token = localStorage.getItem("token");
   return (
     <Route
-      render={(props) =>
-        token ? <Component {...props} /> : <Redirect to="/signin" />
-      }
+      component={(props) => {
+        const token = window.localStorage.getItem("token");
+        if (token) {
+          return <Component {...props} />;
+        } else {
+          return <Redirect to={`/signin`} />;
+        }
+      }}
     />
   );
 };

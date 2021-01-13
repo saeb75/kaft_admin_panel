@@ -6,6 +6,9 @@ import {
   GET_USER_FAILED,
   GET_USER_REQUEST,
   GET_USER_SUCCESS,
+  UPDATE_USER_FAILED,
+  UPDATE_USER_REQUEST,
+  UPDATE_USER_SUCCESS,
 } from "./ActionType";
 
 export const getUsers = () => (dispatch) => {
@@ -31,5 +34,18 @@ export const deleteUser = (id) => (dispatch) => {
     })
     .catch((err) => {
       return dispatch({ type: DELETE_USER_FAILED });
+    });
+};
+
+export const updateUser = (form) => (dispatch) => {
+  dispatch({ type: UPDATE_USER_REQUEST });
+  instance
+    .post("admin/updateuser", form)
+    .then((res) => {
+      return dispatch({ type: UPDATE_USER_SUCCESS });
+    })
+    .catch((err) => {
+      console.log(err);
+      return dispatch({ type: UPDATE_USER_FAILED });
     });
 };

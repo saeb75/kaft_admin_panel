@@ -1,5 +1,11 @@
 import instance from "../helper/axios";
-import { SIGNIN_FAILED, SIGNIN_REQUEST, SIGNIN_SUCCESS } from "./ActionType";
+import {
+  LOGOUT_REQUEST,
+  LOGOUT_SUCCESS,
+  SIGNIN_FAILED,
+  SIGNIN_REQUEST,
+  SIGNIN_SUCCESS,
+} from "./ActionType";
 
 export const signIn = (form) => (dispatch) => {
   dispatch({ type: SIGNIN_REQUEST });
@@ -13,4 +19,11 @@ export const signIn = (form) => (dispatch) => {
       dispatch({ type: SIGNIN_SUCCESS, payload: { user, token } });
     })
     .catch((err) => dispatch({ type: SIGNIN_FAILED }));
+};
+
+export const logut = () => (dispatch) => {
+  dispatch({ type: LOGOUT_REQUEST });
+  localStorage.clear();
+  dispatch({ type: LOGOUT_SUCCESS });
+  window.location.href = "./signin";
 };

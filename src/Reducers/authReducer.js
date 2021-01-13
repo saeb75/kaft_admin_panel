@@ -1,16 +1,16 @@
 import {
+  LOGOUT_SUCCESS,
   SIGNIN_FAILED,
   SIGNIN_REQUEST,
   SIGNIN_SUCCESS,
 } from "../Action/ActionType";
-import { signIn } from "../Action/AuthAction";
-
 let initialState = {
   token: "",
   user: {
     firstName: "",
     lastName: "",
     email: "",
+    profilePicture: "",
   },
   authenticate: false,
   authenticating: false,
@@ -24,7 +24,6 @@ const authReducer = (state = initialState, action) => {
     case SIGNIN_REQUEST:
       return { ...state, authenticating: true };
     case SIGNIN_SUCCESS:
-      console.log(action.payload.user);
       return {
         ...state,
         authenticating: false,
@@ -37,6 +36,16 @@ const authReducer = (state = initialState, action) => {
         ...state,
         authenticating: false,
         authenticate: false,
+      };
+    case LOGOUT_SUCCESS:
+      return {
+        ...state,
+        user: {
+          firstName: "",
+          lastName: "",
+          email: "",
+        },
+        token: "",
       };
     default:
       return state;
