@@ -1,4 +1,7 @@
 import {
+  DELETE_CATEGORY_FAILED,
+  DELETE_CATEGORY_REQUEST,
+  DELETE_CATEGORY_SUCCESS,
   GET_LIST_CATEGORY_FAILED,
   GET_LIST_CATEGORY_REQUEST,
   GET_LIST_CATEGORY_SUCCESS,
@@ -23,6 +26,21 @@ const categoryReducer = (state = initialState, action) => {
         categories: action.payload,
       };
     case GET_LIST_CATEGORY_FAILED:
+      return {
+        ...state,
+        loading: false,
+      };
+    case DELETE_CATEGORY_REQUEST:
+      return {
+        ...state,
+        loading: true,
+      };
+    case DELETE_CATEGORY_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+      };
+    case DELETE_CATEGORY_FAILED:
       return {
         ...state,
         loading: false,

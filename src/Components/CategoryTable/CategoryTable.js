@@ -6,21 +6,31 @@ import { useDispatch, useSelector } from "react-redux";
 import { getListCategory } from "../../Action/CategoryAction";
 import "./style.css";
 import AddCategoryForm from "../AddCategoryForm/AddCategoryForm";
-import { render } from "@testing-library/react";
+import { deletedCategory } from "../../Action/CategoryAction";
 
 const CategoryTable = ({ category }) => {
   const [updateCategory, setUpdateCategory] = useState(false);
+  const [deleteCategory, setDeleteCategory] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState("");
-
-  const handleUpdateClose = () => {
+  const dispatch = useDispatch();
+  const showDeleteModal = (record) => {
+    setDeleteCategory(true);
+    setSelectedCategory(record);
+  };
+  const handleUpdateAndDeleteClose = () => {
     setUpdateCategory(false);
+    setDeleteCategory(false);
   };
   const showUpdateModal = (record) => {
     setUpdateCategory(true);
 
     setSelectedCategory(record);
   };
-
+  const handleDeleted = async () => {
+    await dispatch(deletedCategory(selectedCategory._id));
+    dispatch(getListCategory());
+    handleUpdateAndDeleteClose();
+  };
   return (
     <div>
       <div className="userContainer">
@@ -41,7 +51,7 @@ const CategoryTable = ({ category }) => {
             render={(text, record) => (
               <Space size="middle">
                 <a onClick={() => showUpdateModal(record)}>آپدیت</a>
-                <a>حذف</a>
+                <a onClick={() => showDeleteModal(record)}>حذف</a>
               </Space>
             )}
           />
@@ -51,13 +61,27 @@ const CategoryTable = ({ category }) => {
           modalTitle="آپدیت دسته"
           width={1000}
           footer={[]}
-          handleCancel={handleUpdateClose}
+          handleCancel={handleUpdateAndDeleteClose}
         >
           <AddCategoryForm
             category={category.categories}
             updatedCategory={selectedCategory}
-            handleCancel={handleUpdateClose}
+            handleCancel={handleUpdateAndDeleteClose}
           />
+        </MyModal>
+        <MyModal
+          open={deleteCategory}
+          modalTitle="حذف دسته"
+          handleCancel={handleUpdateAndDeleteClose}
+          footer={[
+            <Button onClick={handleUpdateAndDeleteClose}>خیر</Button>,
+            <Button onClick={handleDeleted} type="primary">
+              بله
+            </Button>,
+            ,
+          ]}
+        >
+          <p>آیا میخواهید {selectedCategory.name} حذف کنید ؟</p>
         </MyModal>
       </div>
     </div>

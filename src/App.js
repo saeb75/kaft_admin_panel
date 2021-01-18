@@ -11,11 +11,18 @@ import "antd/dist/antd.css";
 import { ConfigProvider } from "antd";
 
 import { AllCategory } from "./Page/AllCategory/AllCategory";
+import Product from "./Page/Product/Product";
+import { isUserLoggedIn } from "./Action/AuthAction";
+import { useEffect } from "react";
 
 function App() {
-  /*   const auth = useSelector((state) => state.auth);
+  const auth = useSelector((state) => state.auth);
   const dispatch = useDispatch();
-  const style = { background: "#0092ff", padding: "8px 0" }; */
+  const style = { background: "#0092ff", padding: "8px 0" };
+  useEffect(() => {
+    dispatch(isUserLoggedIn());
+    console.log("loginControl");
+  }, []);
 
   return (
     <>
@@ -24,6 +31,7 @@ function App() {
           <PriviteRoute exact path="/" Component={Home} />
           <PriviteRoute exact path="/users" Component={Users} />
           <PriviteRoute exact path="/category" Component={AllCategory} />
+          <PriviteRoute exact path="/product" Component={Product} />
           <Route path="/signin" component={Signin} />
         </Switch>
       </ConfigProvider>

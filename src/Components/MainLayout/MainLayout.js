@@ -50,7 +50,12 @@ const MainLayout = ({ children }) => {
   return (
     <ConfigProvider direction="rtl">
       <Layout style={{ height: "100vh" }}>
-        <Sider trigger={null} collapsible collapsed={collapsed}>
+        <Sider
+          trigger={null}
+          collapsible
+          collapsed={collapsed}
+          className={collapsed ? "collapseActive" : "collapseDiActive"}
+        >
           <div className="logo" />
           <div className="myAvatar">
             {!collapsed && (
@@ -79,37 +84,22 @@ const MainLayout = ({ children }) => {
             >
               <NavLink to="/users">کاربران</NavLink>
             </Menu.Item>
-            <SubMenu key="sub1" icon={<MailOutlined />} title="دسته‌ها">
-              <Menu.Item
-                key="2"
-                className={pathname == "/category" && "ant-menu-item-selected"}
-              >
-                <NavLink to="/category"> همه دسته‌ها </NavLink>
-              </Menu.Item>
-              <Menu.Item key="3">اضافه کردن دسته</Menu.Item>
-            </SubMenu>
-            <SubMenu
-              key="sub2"
+
+            <Menu.Item
+              icon={<MailOutlined />}
+              key="2"
+              className={pathname == "/category" && "ant-menu-item-selected"}
+            >
+              <NavLink to="/category"> دسته‌ها </NavLink>
+            </Menu.Item>
+
+            <Menu.Item
               icon={<AppstoreOutlined />}
-              title="Navigation Two"
+              key="4"
+              className={pathname == "/product" && "ant-menu-item-selected"}
             >
-              <Menu.Item key="4">Option 5</Menu.Item>
-              <Menu.Item key="5">Option 6</Menu.Item>
-              <SubMenu key="sub3" title="Submenu">
-                <Menu.Item key="6">Option 7</Menu.Item>
-                <Menu.Item key="7">Option 8</Menu.Item>
-              </SubMenu>
-            </SubMenu>
-            <SubMenu
-              key="sub4"
-              icon={<SettingOutlined />}
-              title="Navigation Three"
-            >
-              <Menu.Item key="8">Option 9</Menu.Item>
-              <Menu.Item key="9">Option 10</Menu.Item>
-              <Menu.Item key="10">Option 11</Menu.Item>
-              <Menu.Item key="11">Option 12</Menu.Item>
-            </SubMenu>
+              <NavLink to="/product"> محصولات </NavLink>
+            </Menu.Item>
           </Menu>
           <Menu theme="dark" mode="inline" defaultSelectedKeys={["1"]}>
             <Menu.Item key="12" icon={<VideoCameraOutlined />}>

@@ -1,4 +1,6 @@
+import ApiFunction from "../helper/axios";
 import instance from "../helper/axios";
+
 import {
   LOGOUT_REQUEST,
   LOGOUT_SUCCESS,
@@ -6,16 +8,16 @@ import {
   SIGNIN_REQUEST,
   SIGNIN_SUCCESS,
 } from "./ActionType";
-
+const jwt = require("jsonwebtoken");
 export const signIn = (form) => (dispatch) => {
   dispatch({ type: SIGNIN_REQUEST });
-  instance
+  ApiFunction()
     .post("admin/signin", form)
     .then((res) => {
-      console.log(res.data);
-      const { token, user } = res.data;
+      const { token } = res.data;
+      const { user } = jwt.decode(token);
       localStorage.setItem("token", token);
-      localStorage.setItem("user", JSON.stringify(user));
+
       dispatch({ type: SIGNIN_SUCCESS, payload: { user, token } });
     })
     .catch((err) => dispatch({ type: SIGNIN_FAILED }));
@@ -26,4 +28,18 @@ export const logut = () => (dispatch) => {
   localStorage.clear();
   dispatch({ type: LOGOUT_SUCCESS });
   window.location.href = "./signin";
+};
+
+export const isUserLoggedIn = () => (dispatch) => {
+  const token = localStorage.getItem("token");
+
+  if (token) {
+    const { user } = jwt.decode(token);
+    dispatch({ type: SIGNIN_SUCCESS, payload: { user, token } });
+  } else {
+    dispatch({
+      type: SIGNIN_FAILED,
+      payload: { error: "Failed to login" },
+    });
+  }
 };

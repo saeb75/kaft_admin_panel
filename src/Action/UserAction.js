@@ -1,3 +1,4 @@
+import ApiFunction from "../helper/axios";
 import instance from "../helper/axios";
 import {
   DELETE_USER_FAILED,
@@ -13,7 +14,7 @@ import {
 
 export const getUsers = () => (dispatch) => {
   dispatch({ type: GET_USER_REQUEST });
-  instance
+  ApiFunction()
     .get("getusers")
     .then((res) => {
       let users = res.data;
@@ -27,7 +28,7 @@ export const getUsers = () => (dispatch) => {
 export const deleteUser = (id) => (dispatch) => {
   console.log(id);
   dispatch({ type: DELETE_USER_REQUEST });
-  instance
+  ApiFunction()
     .post("admin/deleteuser", id)
     .then((res) => {
       return dispatch({ type: DELETE_USER_SUCCESS, payload: res.data });
@@ -39,7 +40,7 @@ export const deleteUser = (id) => (dispatch) => {
 
 export const updateUser = (form) => (dispatch) => {
   dispatch({ type: UPDATE_USER_REQUEST });
-  instance
+  ApiFunction()
     .post("admin/updateuser", form)
     .then((res) => {
       return dispatch({ type: UPDATE_USER_SUCCESS });
