@@ -14,3 +14,6 @@
     display: block;
   }
 }
+.layoutContainer {
+  min-height: 100vh;
+}

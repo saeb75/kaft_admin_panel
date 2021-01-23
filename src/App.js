@@ -14,7 +14,9 @@ import { AllCategory } from "./Page/AllCategory/AllCategory";
 import Product from "./Page/Product/Product";
 import { isUserLoggedIn } from "./Action/AuthAction";
 import { useEffect } from "react";
-
+import Color from "./Page/Color/Color";
+import Image from "./Page/Image/Image";
+import AllProduct from "./Page/AllProduct/AllProduct";
 function App() {
   const auth = useSelector((state) => state.auth);
   const dispatch = useDispatch();
@@ -30,8 +32,11 @@ function App() {
         <Switch>
           <PriviteRoute exact path="/" Component={Home} />
           <PriviteRoute exact path="/users" Component={Users} />
+          <PriviteRoute exact path="/images" Component={Image} />
           <PriviteRoute exact path="/category" Component={AllCategory} />
-          <PriviteRoute exact path="/product" Component={Product} />
+          <PriviteRoute exact path="/product/add" Component={Product} />
+          <PriviteRoute exact path="/product" Component={AllProduct} />
+          <PriviteRoute exact path="/color" Component={Color} />
           <Route path="/signin" component={Signin} />
         </Switch>
       </ConfigProvider>

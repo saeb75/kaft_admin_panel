@@ -3,9 +3,13 @@ import { Col, Row, Form, Button, Input, Select } from "antd";
 import ImageUploader from "../ImageUploader/ImageUploader";
 import { Option } from "antd/lib/mentions";
 import { useDispatch } from "react-redux";
+import { UploadOutlined } from "@ant-design/icons";
 import { addCategory, getListCategory } from "../../Action/CategoryAction";
+import MyModal from "../Modal/MyModal";
+import AddImage from "../AddImage/AddImage";
 const AddCategoryForm = ({ category, handleCancel, updatedCategory }) => {
   const [fileList, setFileList] = useState([]);
+  const [addImageOpen, setAddImageOpen] = useState(false);
 
   const [updateForm, setUpdateForm] = useState({
     _id: updatedCategory ? updatedCategory._id : "",
@@ -18,10 +22,13 @@ const AddCategoryForm = ({ category, handleCancel, updatedCategory }) => {
   });
 
   let dispatch = useDispatch();
-  const onChange = ({ fileList: newFileList }) => {
-    setFileList(newFileList);
+  const handleAdd = (id) => {
+    setFileList([id]);
   };
-
+  const handleDelete = (id) => {
+    let deletedList = fileList.filter((item) => item != id);
+    setFileList(deletedList);
+  };
   const onFinish = async () => {
     let form = new FormData();
     form.append("name", updateForm.name);
@@ -29,7 +36,7 @@ const AddCategoryForm = ({ category, handleCancel, updatedCategory }) => {
     form.append("slug", updateForm.slug);
     form.append("parentId", updateForm.parentId);
     if (fileList[0]) {
-      form.append("categoryImg", fileList[0].originFileObj);
+      form.append("categoryImg", fileList[0]);
     }
 
     await dispatch(addCategory(form));
@@ -54,6 +61,9 @@ const AddCategoryForm = ({ category, handleCancel, updatedCategory }) => {
   };
   const handleSelect = (value) => {
     setUpdateForm({ ...updateForm, parentId: value });
+  };
+  const canselAddImage = () => {
+    setAddImageOpen(false);
   };
   return (
     <div>
@@ -97,7 +107,12 @@ const AddCategoryForm = ({ category, handleCancel, updatedCategory }) => {
                 </Select>
               </Form.Item>
               <div>
-                <ImageUploader onChange={onChange} fileList={fileList} />
+                <Button
+                  icon={<UploadOutlined />}
+                  onClick={() => setAddImageOpen(true)}
+                >
+                  اضافه کردن عکس
+                </Button>
               </div>
             </Col>
             <Col lg={24} xs={24}>
@@ -107,6 +122,19 @@ const AddCategoryForm = ({ category, handleCancel, updatedCategory }) => {
             </Col>
           </Row>
         </Form>
+        <MyModal
+          width={1000}
+          modalTitle="اضاف کردن عکس"
+          open={addImageOpen}
+          handleCancel={canselAddImage}
+          footer={[<Button onClick={canselAddImage}>بستن</Button>]}
+        >
+          <AddImage
+            handleAdd={handleAdd}
+            fileList={fileList}
+            handleDelete={handleDelete}
+          />
+        </MyModal>
       </div>
     </div>
   );

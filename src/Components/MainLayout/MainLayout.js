@@ -19,7 +19,6 @@ import SubMenu from "antd/lib/menu/SubMenu";
 import { Link, NavLink, useLocation, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { logut } from "../../Action/AuthAction";
-
 const { Header, Sider, Content } = Layout;
 
 // submenu keys of first level
@@ -49,7 +48,7 @@ const MainLayout = ({ children }) => {
 
   return (
     <ConfigProvider direction="rtl">
-      <Layout style={{ height: "100vh" }}>
+      <Layout className="layoutContainer">
         <Sider
           trigger={null}
           collapsible
@@ -84,7 +83,6 @@ const MainLayout = ({ children }) => {
             >
               <NavLink to="/users">کاربران</NavLink>
             </Menu.Item>
-
             <Menu.Item
               icon={<MailOutlined />}
               key="2"
@@ -92,7 +90,6 @@ const MainLayout = ({ children }) => {
             >
               <NavLink to="/category"> دسته‌ها </NavLink>
             </Menu.Item>
-
             <Menu.Item
               icon={<AppstoreOutlined />}
               key="4"
@@ -100,11 +97,28 @@ const MainLayout = ({ children }) => {
             >
               <NavLink to="/product"> محصولات </NavLink>
             </Menu.Item>
-          </Menu>
-          <Menu theme="dark" mode="inline" defaultSelectedKeys={["1"]}>
-            <Menu.Item key="12" icon={<VideoCameraOutlined />}>
-              nav 2
+            <Menu.Item
+              key="22"
+              icon={<VideoCameraOutlined />}
+              className={pathname == "/product/add" && "ant-menu-item-selected"}
+            >
+              <NavLink to="/product/add"> اضافه کردن محصول </NavLink>
             </Menu.Item>
+            <Menu.Item
+              key="20"
+              icon={<VideoCameraOutlined />}
+              className={pathname == "/images" && "ant-menu-item-selected"}
+            >
+              <NavLink to="/images"> عکس ها </NavLink>
+            </Menu.Item>
+            <Menu.Item
+              key="22"
+              icon={<VideoCameraOutlined />}
+              className={pathname == "/color" && "ant-menu-item-selected"}
+            >
+              <NavLink to="/color"> رنگ ها </NavLink>
+            </Menu.Item>
+
             <Menu.Item key="13" icon={<LoginOutlined />} onClick={logoutUser}>
               خروج
             </Menu.Item>
@@ -121,11 +135,12 @@ const MainLayout = ({ children }) => {
             </i>
           </Header>
           <Content
-            className="site-layout-background"
             style={{
               margin: "24px 16px",
-              padding: 24,
-              minHeight: 280,
+              paddingTop: 24,
+              paddingRight: 24,
+              paddingLeft: 24,
+              height: "100%",
             }}
           >
             {children}

@@ -44,7 +44,19 @@ const CategoryTable = ({ category }) => {
             }}
             key="email"
           />
-
+          <Column
+            title="عکس"
+            key="action"
+            render={(text, record) => (
+              <Space size="middle">
+                <img
+                  width="60"
+                  height="60"
+                  src={record.categoryImg && record.categoryImg.image}
+                />
+              </Space>
+            )}
+          />
           <Column
             title="اکشن"
             key="action"

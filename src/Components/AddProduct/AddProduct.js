@@ -1,53 +1,69 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Form, Input, Button, Checkbox, Row, Col, Select } from "antd";
 import AddSizeAndQuantity from "../AddSizeAndQuantity/AddSizeAndQuantity";
 import ImageUploader from "./ImageUploder/ImageUploader";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { addProducts } from "../../Action/ProductAction";
-
+import { getColors } from "../../Action/ColorAction";
+import MyModal from "../Modal/MyModal";
+import AddImage from "../AddImage/AddImage";
+import { UploadOutlined } from "@ant-design/icons";
 const layout = {};
 const tailLayout = {};
 const AddProduct = ({ category }) => {
+  const [addImageOpen, setAddImageOpen] = useState(false);
   const [newProduct, setNewProduct] = useState({
     name: "",
     slug: "",
     description: "",
     category: "",
+    price: "",
+    color: "",
     fileList: [],
     AddSizeAndQuantity: [],
   });
+  const handleAdd = (id) => {
+    setNewProduct({ ...newProduct, fileList: [...newProduct.fileList, id] });
+  };
+  const handleDelete = (id) => {
+    let deletedList = newProduct.fileList.filter((item) => item != id);
+    setNewProduct({ ...newProduct, fileList: deletedList });
+  };
   const dispatch = useDispatch();
+  const color = useSelector((state) => state.color);
+  useEffect(() => {
+    dispatch(getColors());
+  }, []);
+  /*  name,
+  description,
+  productDetails,
+  category,
+  slug,
+  productImg, */
   const onFinish = () => {
-    let form = new FormData();
-    form.append("name", newProduct.name);
-    form.append("slug", newProduct.slug);
-    form.append("category", newProduct.category);
-    form.append("description", newProduct.description);
-    if (newProduct.fileList) {
-      newProduct.fileList.map((item) => {
-        form.append("productImg", item.originFileObj);
-      });
-    }
-    if (newProduct.AddSizeAndQuantity) {
-      newProduct.AddSizeAndQuantity.map((item) => {
-        let myJson = JSON.stringify({
-          size: item.size,
-          quantity: item.quantity,
-        });
-        return form.append("productDetails", myJson);
-      });
-    }
-    dispatch(addProducts(form));
+    dispatch(
+      addProducts({
+        name: newProduct.name,
+        description: newProduct.description,
+        productDetails: newProduct.AddSizeAndQuantity,
+        category: newProduct.category,
+        slug: newProduct.slug,
+        color: newProduct.color,
+        productImg: newProduct.fileList,
+      })
+    );
   };
 
-  const onFinishFailed = (errorInfo: any) => {
+  const onFinishFailed = (errorInfo) => {
     console.log("Failed:", errorInfo);
   };
   const handleSelect = (value) => {};
   let handleChange = (name, value) => {
     setNewProduct({ ...newProduct, [name]: value });
   };
-
+  const canselAddImage = () => {
+    setAddImageOpen(false);
+  };
   return (
     <div>
       <Form
@@ -60,7 +76,7 @@ const AddProduct = ({ category }) => {
         <Row>
           <Col lg={24}>
             <Row gutter={16}>
-              <Col lg={8}>
+              <Col lg={8} xs={24}>
                 <Form.Item>
                   <div style={{ display: "flex", flexDirection: "column" }}>
                     <h3>نام</h3>
@@ -71,7 +87,7 @@ const AddProduct = ({ category }) => {
                   </div>
                 </Form.Item>
               </Col>
-              <Col lg={8}>
+              <Col lg={8} xs={24}>
                 <Form.Item>
                   <div style={{ display: "flex", flexDirection: "column" }}>
                     <h3>اسلاگ</h3>
@@ -81,14 +97,13 @@ const AddProduct = ({ category }) => {
                   </div>
                 </Form.Item>
               </Col>
-              <Col lg={8}>
+              <Col lg={8} xs={24}>
                 <Form.Item>
                   <div style={{ display: "flex", flexDirection: "column" }}>
-                    <h3>توضیحات محصول</h3>
-                    <Input.TextArea
-                      onChange={(e) =>
-                        handleChange("description", e.target.value)
-                      }
+                    <h3>قیمت</h3>
+                    <Input
+                      type="number"
+                      onChange={(e) => handleChange("price", e.target.value)}
                     />
                   </div>
                 </Form.Item>
@@ -97,7 +112,7 @@ const AddProduct = ({ category }) => {
           </Col>
           <Col lg={24}>
             <Row gutter={16}>
-              <Col lg={8}>
+              <Col lg={8} xs={24}>
                 <Form.Item className="labelDir">
                   <div style={{ display: "flex", flexDirection: "column" }}>
                     <h3>دسته مادر</h3>
@@ -114,11 +129,50 @@ const AddProduct = ({ category }) => {
                 </Form.Item>
               </Col>
 
-              <Col lg={8}>
+              <Col lg={8} xs={24}>
                 <Form.Item>
                   <div style={{ display: "flex", flexDirection: "column" }}>
                     <h3>رنگ:</h3>
-                    <Select onChange={handleSelect} showSearch={true}></Select>
+                    <Select
+                      onChange={(value) => handleChange("color", value)}
+                      showSearch={true}
+                    >
+                      {color.colors.colors &&
+                        color.colors.colors.map((item) => {
+                          return (
+                            <option value={item._id}>
+                              <div
+                                style={{
+                                  display: "flex",
+                                  justifyContent: "space-between",
+                                }}
+                              >
+                                <p>{item.prName}</p>
+                                <div
+                                  style={{
+                                    backgroundColor: `#${item.code}`,
+                                    width: "20px",
+                                    height: "20px",
+                                    marginTop: "4px",
+                                  }}
+                                ></div>
+                              </div>
+                            </option>
+                          );
+                        })}
+                    </Select>
+                  </div>
+                </Form.Item>
+              </Col>
+              <Col lg={8} xs={24}>
+                <Form.Item>
+                  <div style={{ display: "flex", flexDirection: "column" }}>
+                    <h3>توضیحات محصول</h3>
+                    <Input.TextArea
+                      onChange={(e) =>
+                        handleChange("description", e.target.value)
+                      }
+                    />
                   </div>
                 </Form.Item>
               </Col>
@@ -126,17 +180,23 @@ const AddProduct = ({ category }) => {
           </Col>
           <Col lg={24}>
             <Row gutter={16}>
-              <Col lg={12}>
+              <Col lg={12} xs={24}>
                 <AddSizeAndQuantity
                   setNewProduct={setNewProduct}
                   newProduct={newProduct}
                 />
               </Col>
-              <Col lg={12}>
-                <ImageUploader
+              <Col lg={12} xs={24}>
+                {/*   <ImageUploader
                   setNewProduct={setNewProduct}
                   newProduct={newProduct}
-                />
+                /> */}
+                <Button
+                  icon={<UploadOutlined />}
+                  onClick={() => setAddImageOpen(true)}
+                >
+                  اضافه کردن عکس
+                </Button>
               </Col>
             </Row>
           </Col>
@@ -147,6 +207,19 @@ const AddProduct = ({ category }) => {
             Submit
           </Button>
         </Form.Item>
+        <MyModal
+          width={1000}
+          modalTitle="اضاف کردن عکس"
+          open={addImageOpen}
+          handleCancel={canselAddImage}
+          footer={[<Button onClick={canselAddImage}>بستن</Button>]}
+        >
+          <AddImage
+            handleAdd={handleAdd}
+            fileList={newProduct.fileList}
+            handleDelete={handleDelete}
+          />
+        </MyModal>
       </Form>
     </div>
   );
