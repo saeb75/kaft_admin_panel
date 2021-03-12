@@ -2,6 +2,9 @@ import {
   ADD_PRODUCT_FAILED,
   ADD_PRODUCT_REQUEST,
   ADD_PRODUCT_SUCCESS,
+  GET_DISCOUNT_LIST_FAILURE,
+  GET_DISCOUNT_LIST_REQUEST,
+  GET_DISCOUNT_LIST_SUCCESS,
   GET_PRODUCT_FAILED,
   GET_PRODUCT_REQUEST,
   GET_PRODUCT_SUCCESS,
@@ -12,6 +15,7 @@ let initialState = {
   loading: false,
   product: "",
   totalPage: "",
+  discount: "",
 };
 
 const productReducer = (state = initialState, action) => {
@@ -40,7 +44,7 @@ const productReducer = (state = initialState, action) => {
     case GET_PRODUCT_SUCCESS:
       return {
         ...state,
-        loading: true,
+        loading: false,
         products: action.payload.products,
         totalPage: action.payload.totalPage,
       };
@@ -49,7 +53,22 @@ const productReducer = (state = initialState, action) => {
         ...state,
         loading: false,
       };
-
+    case GET_DISCOUNT_LIST_REQUEST:
+      return {
+        ...state,
+        loading: true,
+      };
+    case GET_DISCOUNT_LIST_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        discount: action.payload,
+      };
+    case GET_DISCOUNT_LIST_FAILURE:
+      return {
+        ...state,
+        loading: false,
+      };
     default:
       return state;
   }

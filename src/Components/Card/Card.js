@@ -1,15 +1,16 @@
 import React from "react";
 import photo from "./114203993.jpg";
 import { Card, Avatar } from "antd";
-import {
-  EditOutlined,
-  EllipsisOutlined,
-  SettingOutlined,
-} from "@ant-design/icons";
+import { EditOutlined, DeleteOutlined, StarOutlined } from "@ant-design/icons";
 
 const { Meta } = Card;
-const MyCard = ({ item }) => {
-  let { productImg } = item;
+const MyCard = ({
+  item,
+  HandleUpdateModal,
+  handleDeleteModal,
+  handleDiscount,
+}) => {
+  let { productImg, name } = item;
   return (
     <div>
       <Card
@@ -17,14 +18,18 @@ const MyCard = ({ item }) => {
         style={{ width: 300 }}
         cover={<img alt="example" src={productImg[0].img.image} />}
         actions={[
-          <SettingOutlined key="setting" />,
-          <EditOutlined key="edit" />,
+          <DeleteOutlined
+            key="setting"
+            onClick={() => handleDeleteModal(item)}
+          />,
+          <EditOutlined key="edit" onClick={() => HandleUpdateModal(item)} />,
+          <StarOutlined
+            key="discount"
+            onClick={() => handleDiscount(item._id)}
+          />,
         ]}
       >
-        <Meta
-          title="ست لباس بچگانه ام کا سی طرح یلدا"
-          description="۸۸,۰۰۰ تومان"
-        />
+        <Meta title={name} description="۸۸,۰۰۰ تومان" />
       </Card>
     </div>
   );

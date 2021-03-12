@@ -26,24 +26,24 @@ const AddSizeAndQuantity = ({ setNewProduct, newProduct }) => {
       ...newProduct,
       AddSizeAndQuantity: [
         ...newProduct.AddSizeAndQuantity,
-        { id: Date.now(), size: "", quantity: "" },
+        { _id: Date.now(), size: "", quantity: "" },
       ],
     });
   };
 
   const handleChange = (id, name, value) => {
     let updatedProduct = newProduct.AddSizeAndQuantity.map((item) =>
-      item.id == id ? { ...item, [name]: value } : { ...item }
+      item._id == id ? { ...item, [name]: value } : { ...item }
     );
     setNewProduct({ ...newProduct, AddSizeAndQuantity: updatedProduct });
   };
   const handleDelete = (id) => {
     let deleteProduct = newProduct.AddSizeAndQuantity.filter(
-      (item) => item.id != id
+      (item) => item._id != id
     );
     setNewProduct({ ...newProduct, AddSizeAndQuantity: deleteProduct });
   };
-  let sizes = ["Xs", "S", "M", "L", "Xl", "Xxl"];
+  let sizes = ["XS", "S", "M", "L", "XL", "XXL"];
   return (
     <Form name="dynamic_form_nest_item" onFinish={onFinish} autoComplete="off">
       {AddSizeAndQuantity && (
@@ -59,7 +59,7 @@ const AddSizeAndQuantity = ({ setNewProduct, newProduct }) => {
                   className="antSelectDesign"
                   style={{ width: "100%" }}
                   value={record.size}
-                  onChange={(value) => handleChange(record.id, "size", value)}
+                  onChange={(value) => handleChange(record._id, "size", value)}
                 >
                   {sizes.map((item) => {
                     return (
@@ -84,7 +84,7 @@ const AddSizeAndQuantity = ({ setNewProduct, newProduct }) => {
                   type="number"
                   value={record.quantity}
                   onChange={(e) =>
-                    handleChange(record.id, "quantity", e.target.value)
+                    handleChange(record._id, "quantity", e.target.value)
                   }
                 />
               );
@@ -94,7 +94,9 @@ const AddSizeAndQuantity = ({ setNewProduct, newProduct }) => {
           <Column
             title=" عملیات"
             render={(text, record) => {
-              return <DeleteOutlined onClick={() => handleDelete(record.id)} />;
+              return (
+                <DeleteOutlined onClick={() => handleDelete(record._id)} />
+              );
             }}
             key="email"
           />

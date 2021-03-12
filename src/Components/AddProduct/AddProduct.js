@@ -3,25 +3,30 @@ import { Form, Input, Button, Checkbox, Row, Col, Select } from "antd";
 import AddSizeAndQuantity from "../AddSizeAndQuantity/AddSizeAndQuantity";
 import ImageUploader from "./ImageUploder/ImageUploader";
 import { useDispatch, useSelector } from "react-redux";
-import { addProducts } from "../../Action/ProductAction";
+import { addProducts, getProducts } from "../../Action/ProductAction";
 import { getColors } from "../../Action/ColorAction";
 import MyModal from "../Modal/MyModal";
 import AddImage from "../AddImage/AddImage";
 import { UploadOutlined } from "@ant-design/icons";
 const layout = {};
 const tailLayout = {};
-const AddProduct = ({ category }) => {
+const AddProduct = ({ category, product }) => {
   const [addImageOpen, setAddImageOpen] = useState(false);
+  const [featureProduct, setFeatureProduct] = useState(true);
+  let myList = [];
+  console.log(product);
   const [newProduct, setNewProduct] = useState({
-    name: "",
-    slug: "",
-    description: "",
-    category: "",
-    price: "",
-    color: "",
-    fileList: [],
-    AddSizeAndQuantity: [],
+    _id: product && product._id,
+    name: product ? product.name : "",
+    slug: product ? product.slug : "",
+    description: product ? product.description : "",
+    category: product ? product.category : "",
+    price: product ? product.price : "",
+    color: product ? product.color : "",
+    fileList: product ? product.productImg.map((item) => item.img._id) : [],
+    AddSizeAndQuantity: product ? product.productDetails : [],
   });
+
   const handleAdd = (id) => {
     setNewProduct({ ...newProduct, fileList: [...newProduct.fileList, id] });
   };
@@ -34,24 +39,35 @@ const AddProduct = ({ category }) => {
   useEffect(() => {
     dispatch(getColors());
   }, []);
-  /*  name,
-  description,
-  productDetails,
-  category,
-  slug,
-  productImg, */
-  const onFinish = () => {
-    dispatch(
+  console.log(newProduct.price);
+  useEffect(() => {
+    setNewProduct({
+      _id: product && product._id,
+      name: product ? product.name : "",
+      slug: product ? product.slug : "",
+      description: product ? product.description : "",
+      category: product ? product.category : "",
+      price: product ? product.price : "",
+      color: product ? product.color : "",
+      fileList: product ? product.productImg.map((item) => item.img._id) : [],
+      AddSizeAndQuantity: product ? product.productDetails : [],
+    });
+  }, [product]);
+  const onFinish = async () => {
+    await dispatch(
       addProducts({
         name: newProduct.name,
         description: newProduct.description,
         productDetails: newProduct.AddSizeAndQuantity,
         category: newProduct.category,
         slug: newProduct.slug,
+        price: newProduct.price,
         color: newProduct.color,
         productImg: newProduct.fileList,
+        id: newProduct._id && newProduct._id,
       })
     );
+    dispatch(getProducts());
   };
 
   const onFinishFailed = (errorInfo) => {
@@ -81,6 +97,7 @@ const AddProduct = ({ category }) => {
                   <div style={{ display: "flex", flexDirection: "column" }}>
                     <h3>نام</h3>
                     <Input
+                      value={newProduct.name}
                       type="text"
                       onChange={(e) => handleChange("name", e.target.value)}
                     />
@@ -92,6 +109,7 @@ const AddProduct = ({ category }) => {
                   <div style={{ display: "flex", flexDirection: "column" }}>
                     <h3>اسلاگ</h3>
                     <Input
+                      value={newProduct.slug}
                       onChange={(e) => handleChange("slug", e.target.value)}
                     />
                   </div>
@@ -102,6 +120,7 @@ const AddProduct = ({ category }) => {
                   <div style={{ display: "flex", flexDirection: "column" }}>
                     <h3>قیمت</h3>
                     <Input
+                      value={newProduct.price}
                       type="number"
                       onChange={(e) => handleChange("price", e.target.value)}
                     />
@@ -118,6 +137,7 @@ const AddProduct = ({ category }) => {
                     <h3>دسته مادر</h3>
 
                     <Select
+                      value={newProduct.category ? newProduct.category : ""}
                       onChange={(value) => handleChange("category", value)}
                     >
                       {category &&
@@ -134,6 +154,7 @@ const AddProduct = ({ category }) => {
                   <div style={{ display: "flex", flexDirection: "column" }}>
                     <h3>رنگ:</h3>
                     <Select
+                      value={newProduct.color}
                       onChange={(value) => handleChange("color", value)}
                       showSearch={true}
                     >
@@ -169,6 +190,7 @@ const AddProduct = ({ category }) => {
                   <div style={{ display: "flex", flexDirection: "column" }}>
                     <h3>توضیحات محصول</h3>
                     <Input.TextArea
+                      value={newProduct.description}
                       onChange={(e) =>
                         handleChange("description", e.target.value)
                       }

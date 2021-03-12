@@ -118,6 +118,13 @@ const MainLayout = ({ children }) => {
             >
               <NavLink to="/color"> رنگ ها </NavLink>
             </Menu.Item>
+            <Menu.Item
+              key="22"
+              icon={<VideoCameraOutlined />}
+              className={pathname == "/discount" && "ant-menu-item-selected"}
+            >
+              <NavLink to="/discount"> شگفت انگیز </NavLink>
+            </Menu.Item>
 
             <Menu.Item key="13" icon={<LoginOutlined />} onClick={logoutUser}>
               خروج

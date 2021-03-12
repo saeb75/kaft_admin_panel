@@ -16,10 +16,10 @@ export const addImage = (form) => (dispatch) => {
     .catch((err) => dispatch({ type: ADD_IMAGE_FAILED }));
 };
 
-export const getImage = () => (dispatch) => {
+export const getImage = (pageNum) => (dispatch) => {
   dispatch({ type: GET_IMAGE_REQUEST });
   ApiFunction()
-    .get("image/get")
+    .get(`image/get?page=${pageNum}`)
     .then((res) => dispatch({ type: GET_IMAGE_SUCCESS, payload: res.data }))
     .catch((err) => dispatch({ type: GET_IMAGE_FAILED }));
 };

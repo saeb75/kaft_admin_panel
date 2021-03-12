@@ -17,6 +17,7 @@ import { useEffect } from "react";
 import Color from "./Page/Color/Color";
 import Image from "./Page/Image/Image";
 import AllProduct from "./Page/AllProduct/AllProduct";
+import Discount from "./Page/Discount/Discount";
 function App() {
   const auth = useSelector((state) => state.auth);
   const dispatch = useDispatch();
@@ -34,6 +35,7 @@ function App() {
           <PriviteRoute exact path="/users" Component={Users} />
           <PriviteRoute exact path="/images" Component={Image} />
           <PriviteRoute exact path="/category" Component={AllCategory} />
+          <PriviteRoute exact path="/discount" Component={Discount} />
           <PriviteRoute exact path="/product/add" Component={Product} />
           <PriviteRoute exact path="/product" Component={AllProduct} />
           <PriviteRoute exact path="/color" Component={Color} />

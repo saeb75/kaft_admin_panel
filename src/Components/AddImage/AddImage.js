@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import "./style.css";
-import { Button, Col, Image, Row } from "antd";
+import { Button, Col, Image, Pagination, Row } from "antd";
 import { getImage } from "../../Action/ImageAction";
 const AddImage = ({ fileList, handleAdd, handleDelete }) => {
   const dispatch = useDispatch();
@@ -10,10 +10,14 @@ const AddImage = ({ fileList, handleAdd, handleDelete }) => {
     dispatch(getImage());
   }, []);
   let myImages = image.images._images;
+  let totalPage = image.images.totalPage;
 
   const handleButton = (id) => {
     const buttonInfo = fileList.includes(id);
     return buttonInfo;
+  };
+  const handleChage = (page) => {
+    dispatch(getImage(page));
   };
   return (
     <div>
@@ -50,6 +54,11 @@ const AddImage = ({ fileList, handleAdd, handleDelete }) => {
             );
           })}
       </Row>
+      <Pagination
+        defaultCurrent={1}
+        total={totalPage * 10}
+        onChange={handleChage}
+      />
     </div>
   );
 };
